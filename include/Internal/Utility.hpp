@@ -2,24 +2,21 @@
 
 namespace Internal
 {
+	struct EditorIDAndPluginName
+	{
+		std::string editor_id{};
+		std::string plugin_name{};
+	};
+
 	class Utility
 	{
 	public:
-		static auto Split(std::string s) noexcept
-		{
-			std::vector<std::string> result{};
+		static std::vector<std::string> Split(std::string s) noexcept;
 
-			std::size_t pos{};
-			while ((pos = s.find(',')) != std::string::npos) {
-				result.emplace_back(s.substr(0, pos));
-				s.erase(0, pos + 1);
-			}
+		static std::string GetFormEditorID(const RE::TESForm* a_form) noexcept;
 
-			if (!s.empty()) {
-				result.emplace_back(s);
-			}
+		static auto ToFormID(const std::string& s) noexcept { return static_cast<RE::TESFormID>(std::stoul(s, nullptr, 16)); }
 
-			return result;
-		}
+		static std::vector<RE::BGSMusicTrackFormWrapper*> BuildFormVec(const std::unordered_set<std::string>& tokens) noexcept;
 	};
 }

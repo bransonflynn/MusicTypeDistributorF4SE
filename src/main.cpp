@@ -1,3 +1,4 @@
+#include "Internal/LoadEditorIDs.hpp"
 #include "Internal/Messaging.hpp"
 
 F4SE_EXPORT constinit auto F4SEPlugin_Version = []() noexcept {
@@ -41,6 +42,10 @@ extern "C" DLLEXPORT bool F4SEAPI F4SEPlugin_Query(const F4SE::QueryInterface* a
 extern "C" DLLEXPORT bool F4SEAPI F4SEPlugin_Load(const F4SE::LoadInterface* a_f4se)
 {
 	F4SE::Init(a_f4se);
+
+	logger::info("LoadEditorIDs Installing..."sv);
+	Internal::LoadEditorIDs::Install();
+	logger::info("LoadEditorIDs installed."sv);
 
 	logger::info("---------------------------------------------"sv);
 	logger::info("Registering for F4SE events..."sv);

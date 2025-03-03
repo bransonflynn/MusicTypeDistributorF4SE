@@ -10,6 +10,6 @@ namespace Internal
 		static void ParseINIs(CSimpleIniA& ini) noexcept;
 
 		//
-		// static void PrepareDistributionMap() noexcept;
+		static void PrepareDistributionMap() noexcept;
 	};
 }
