@@ -19,28 +19,6 @@ namespace Internal
 		return result;
 	}
 
-	std::string Utility::GetFormEditorID(const RE::TESForm* a_form) noexcept
-	{
-		switch (a_form->GetFormType()) {
-			case RE::ENUM_FORMTYPE::kMUSC: {
-				return a_form->GetFormEditorID();
-				break;
-			}
-			case RE::ENUM_FORMTYPE::kMUST: {
-				return a_form->GetFormEditorID();
-				break;
-			}
-			case RE::ENUM_FORMTYPE::kSOUN: {
-				return a_form->GetFormEditorID();
-				break;
-			}
-			default: {
-				return "";
-				break;
-			}
-		}
-	}
-
 	std::vector<RE::BGSMusicTrackFormWrapper*> Utility::BuildFormVec(const std::unordered_set<std::string>& tokens) noexcept
 	{
 		std::vector<RE::BGSMusicTrackFormWrapper*> result;

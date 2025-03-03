@@ -113,6 +113,7 @@ namespace Internal
 
 	void Parser::PrepareDistributionMap() noexcept
 	{
+		// general distribution prep
 		for (const auto& [k, v] : Maps::prep_map) {
 			auto k_copy{ k };
 
@@ -122,6 +123,7 @@ namespace Internal
 				k_copy = k_copy.substr(0, k_copy.size() - 1);
 				clear_list = true;
 			}
+
 			// general prep
 			if (const auto music_type{ RE::TESForm::GetFormByEditorID(RE::BSFixedString(k_copy))->As<RE::BGSMusicType>() }) {
 				logger::info(FMT_STRING("Found music type {} ({:08X})"),
@@ -134,54 +136,70 @@ namespace Internal
 				logger::warn(FMT_STRING("An EditorID was parsed that did not correspond with a form. EditorID: {}"),
 					k_copy);
 			}
+		}
 
-			// location distribution prep
-			for (const auto& [loc, mus] : Maps::location_prep_map) {
-				if (const auto location{ RE::TESForm::GetFormByEditorID(RE::BSFixedString(loc))->As<RE::BGSLocation>() }) {
-					logger::info(FMT_STRING("Found location {} ({:08X}) in {}"),
-						Utility::GetFormEditorID(location), location->GetFormID(), location->GetFile()->GetFilename());
+		// location distribution prep
+		for (const auto& [loc, mus] : Maps::location_prep_map) {
+			logger::info(FMT_STRING("prep distr map: location: loc={}, mus={}"), loc, mus);
+			if (const auto location{ RE::TESForm::GetFormByEditorID(RE::BSFixedString(loc))->As<RE::BGSLocation>() }) {
 
-					if (Maps::created_forms_map.contains(mus)) {
-						const auto music_type{ Maps::created_forms_map[mus] };
-						logger::info(FMT_STRING("\tFound created music type {} ({:08X})"),
-							music_type->GetFormEditorID(), music_type->GetFormID());
+				logger::info(FMT_STRING("Found location {} ({:08X}) in {}"), location->GetFormEditorID(), location->GetFormID(), location->GetFile()->GetFilename());
 
-						Maps::location_distr_map[location] = music_type;
-					}
-					else if (const auto music_type{ RE::TESForm::GetFormByEditorID(RE::BSFixedString(mus))->As<RE::BGSMusicType>() }) {
-						logger::info(FMT_STRING("\tFound music type {} ({:08X})"),
-							music_type->GetFormEditorID(), music_type->GetFormID());
+				if (const auto music_type{ RE::TESForm::GetFormByEditorID(RE::BSFixedString(mus))->As<RE::BGSMusicType>() }) {
+					logger::info(FMT_STRING("\tFound music type {} ({:08X})"), music_type->GetFormEditorID(), music_type->GetFormID());
 
-						Maps::location_distr_map[location] = music_type;
-					}
+					Maps::location_distr_map[location] = music_type;
+				}
+				else {
+					logger::warn(FMT_STRING("couldnt find music_type from mus={}"), mus);
 				}
 			}
-
-			// regionDataList has not been decoded for Fallout 4 yet
-			// region distribution prep
-			// for (const auto& [reg, mus] : Maps::region_prep_map) {
-			// 	if (const auto region{ RE::TESForm::GetFormByEditorID(RE::BSFixedString(reg))->As<RE::TESRegion>() }) {
-			// 		logger::info(FMT_STRING("Found region {} ({:08X}) in {}"),
-			// 			Utility::GetFormEditorID(region), region->GetFormID(), region->GetFile()->GetFilename());
-
-			// 		if (Maps::created_forms_map.contains(mus)) {
-			// 			const auto music_type{ Maps::created_forms_map[mus] };
-			// 			logger::info(FMT_STRING("\tFound created music type {} ({:08X})"),
-			// 				music_type->GetFormEditorID(), music_type->GetFormID());
-
-			// 			Maps::region_distr_map[region] = music_type;
-			// 		}
-			// 		else if (const auto music_type{ RE::TESForm::GetFormByEditorID(RE::BSFixedString(mus))->As<RE::BGSMusicType>() }) {
-			// 			logger::info(FMT_STRING("\tFound music type {} ({:08X})"),
-			// 				music_type->GetFormEditorID(), music_type->GetFormID());
-
-			// 			Maps::region_distr_map[region] = music_type;
-			// 		}
-			// 	}
-			// }
+			else {
+				//
+				logger::warn(FMT_STRING("did not find location from edid {}"), loc);
+			}
 		}
+
+		// for (const auto& [loc, mus] : Map::location_prep_map) {
+		// 	if (const auto location{ RE::TESForm::LookupByEditorID<RE::BGSLocation>(loc) }) {
+		// 		logger::info("Found location {} (0x{:x}) in {}", Utility::GetFormEditorID(location), location->GetFormID(), location->GetFile()->GetFilename());
+		// 		if (Map::created_forms_map.contains(mus)) {
+		// 			const auto music_type{ Map::created_forms_map[mus] };
+		// 			logger::info("\tFound created music type {} (0x{:x})", music_type->formEditorID, music_type->GetFormID());
+		// 			Map::location_distr_map[location] = music_type;
+		// 		}
+		// 		else if (const auto music_type{ RE::TESForm::LookupByEditorID<RE::BGSMusicType>(mus) }) {
+		// 			logger::info("\tFound music type {} (0x{:x})", music_type->formEditorID, music_type->GetFormID());
+		// 			Map::location_distr_map[location] = music_type;
+		// 		}
+		// 	}
+		// }
+
+		// regionDataList has not been decoded for Fallout 4 yet
+		// region distribution prep
+		// for (const auto& [reg, mus] : Maps::region_prep_map) {
+		// 	if (const auto region{ RE::TESForm::GetFormByEditorID(RE::BSFixedString(reg))->As<RE::TESRegion>() }) {
+		// 		logger::info(FMT_STRING("Found region {} ({:08X}) in {}"),
+		// 			Utility::GetFormEditorID(region), region->GetFormID(), region->GetFile()->GetFilename());
+
+		// 		if (Maps::created_forms_map.contains(mus)) {
+		// 			const auto music_type{ Maps::created_forms_map[mus] };
+		// 			logger::info(FMT_STRING("\tFound created music type {} ({:08X})"),
+		// 				music_type->GetFormEditorID(), music_type->GetFormID());
+
+		// 			Maps::region_distr_map[region] = music_type;
+		// 		}
+		// 		else if (const auto music_type{ RE::TESForm::GetFormByEditorID(RE::BSFixedString(mus))->As<RE::BGSMusicType>() }) {
+		// 			logger::info(FMT_STRING("\tFound music type {} ({:08X})"),
+		// 				music_type->GetFormEditorID(), music_type->GetFormID());
+
+		// 			Maps::region_distr_map[region] = music_type;
+		// 		}
+		// 	}
+		// }
 	}
 }
+
 
 // const auto factory = RE::ConcreteFormFactory<RE::BGSMusicType>::GetFormFactory();
 // const auto new_music_type = factory->Create();

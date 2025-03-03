@@ -8,7 +8,7 @@ namespace Internal
 	{
 		for (const auto& [music_type, pair] : Maps::distr_map) {
 			const auto& [tracks, clear_list]{ pair };
-			const auto music_type_name{ Utility::GetFormEditorID(music_type) };
+			const auto music_type_name{ music_type->GetFormEditorID() };
 			const auto music_type_form_id{ music_type->GetFormID() };
 			if (clear_list) {
 				logger::info(FMT_STRING("Clearing {} ({:08X})"),
@@ -18,7 +18,7 @@ namespace Internal
 			}
 			for (const auto& track : tracks) {
 				logger::info(FMT_STRING("Distributing {} ({:08X}) to {} ({:08X})"),
-					Utility::GetFormEditorID(track), track->GetFormID(), music_type_name, music_type_form_id);
+					track->GetFormEditorID(), track->GetFormID(), music_type_name, music_type_form_id);
 
 				music_type->tracks.emplace_back(track);
 			}
@@ -26,7 +26,7 @@ namespace Internal
 
 		for (const auto& [location, music_type] : Maps::location_distr_map) {
 			logger::info(FMT_STRING("Updating location {} ({:08X}) music type to {} ({:08X})"),
-				Utility::GetFormEditorID(location), location->GetFormID(), Utility::GetFormEditorID(music_type), music_type->GetFormID());
+				location->GetFormEditorID(), location->GetFormID(), music_type->GetFormEditorID(), music_type->GetFormID());
 
 			location->musicType = music_type;
 		}
