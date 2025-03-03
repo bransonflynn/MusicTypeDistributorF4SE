@@ -1,10 +1,15 @@
 #pragma once
+#include <simpleini.h>
 
 namespace Internal
 {
 	class Parser
 	{
 	public:
-		static void ParseINIs() noexcept;
+		// gather all inis from dir
+		static void ParseINIs(CSimpleIniA& ini) noexcept;
+
+		//
+		// static void PrepareDistributionMap() noexcept;
 	};
 }

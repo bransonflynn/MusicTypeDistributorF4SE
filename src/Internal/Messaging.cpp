@@ -1,4 +1,6 @@
 #include "Internal/Messaging.hpp"
+#include "Internal/Distributor.hpp"
+#include "Internal/Parser.hpp"
 
 namespace Internal
 {
@@ -39,6 +41,9 @@ namespace Internal
 			}
 			case F4SE::MessagingInterface::kGameDataReady: {
 				// distribute sounds
+				CSimpleIniA ini;
+				Parser::ParseINIs(ini);
+				Distributor::Distribute();
 				break;
 			}
 			default: {
