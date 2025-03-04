@@ -124,7 +124,7 @@ namespace Internal
 				clear_list = true;
 			}
 
-			// general prep
+			//
 			if (const auto music_type{ RE::TESForm::GetFormByEditorID(RE::BSFixedString(k_copy))->As<RE::BGSMusicType>() }) {
 				logger::info(FMT_STRING("Found music type {} ({:08X})"),
 					music_type->GetFormEditorID(), music_type->GetFormID());
@@ -133,8 +133,7 @@ namespace Internal
 				Maps::distr_map[music_type] = { form_vec, clear_list };
 			}
 			else {
-				logger::warn(FMT_STRING("An EditorID was parsed that did not correspond with a form. EditorID: {}"),
-					k_copy);
+				logger::warn(FMT_STRING("An EditorID was parsed that did not correspond with a form. EditorID: {}"), k_copy);
 			}
 		}
 
@@ -146,8 +145,7 @@ namespace Internal
 				logger::info(FMT_STRING("Found location {} ({:08X}) in {}"), location->GetFormEditorID(), location->GetFormID(), location->GetFile()->GetFilename());
 
 				if (const auto music_type{ RE::TESForm::GetFormByEditorID(RE::BSFixedString(mus))->As<RE::BGSMusicType>() }) {
-					logger::info(FMT_STRING("\tFound music type {} ({:08X})"), music_type->GetFormEditorID(), music_type->GetFormID());
-
+					logger::info(FMT_STRING("\tFound music type: {} ({:08X})"), music_type->GetFormEditorID(), music_type->GetFormID());
 					Maps::location_distr_map[location] = music_type;
 				}
 				else {
@@ -155,7 +153,6 @@ namespace Internal
 				}
 			}
 			else {
-				//
 				logger::warn(FMT_STRING("did not find location from edid {}"), loc);
 			}
 		}
@@ -199,7 +196,6 @@ namespace Internal
 		// }
 	}
 }
-
 
 // const auto factory = RE::ConcreteFormFactory<RE::BGSMusicType>::GetFormFactory();
 // const auto new_music_type = factory->Create();
