@@ -50,6 +50,16 @@ namespace Internal
 			logger::info(FMT_STRING("Loading config file: {}"), filename);
 
 			// TODO check Utility::IsIniFileModName(filename) here
+			// std::string res = Utility::IsIniFileModName(filename);
+			// logger::info(FMT_STRING("res: {}"), res);
+			// if (res == "") {
+			// }
+			// else {
+			// 	if (Utility::IsPluginInstalled(res) == false) {
+			// 		logger::info(FMT_STRING("Process aborted for ini file: {}. Mod {} was not installed."), filename, res);
+			// 		continue;
+			// 	}
+			// }
 
 			ini.LoadFile(f.wstring().data());
 

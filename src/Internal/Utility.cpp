@@ -34,7 +34,7 @@ namespace Internal
 		return result;
 	}
 
-	bool Utility::IsIniFileModName(std::string filename)
+	std::string Utility::IsIniFileModName(std::string filename)
 	{
 		// TODO improve this garbage
 
@@ -43,23 +43,24 @@ namespace Internal
 		if (index != std::string::npos) {
 			filename.erase(index, mus_suffix.length());
 		}
-		logger::info(FMT_STRING("filename erase: {}"),
-			filename);
+		logger::info(FMT_STRING("filename erase: {}"), filename);
 
 		std::string extension = filename.substr(filename.length() - 4, 4);
-		logger::info(FMT_STRING("extension: {}"),
-			extension);
+		logger::info(FMT_STRING("extension: {}"), extension);
 
 		if (extension == ".esp" || extension == ".esm" || extension == ".esl") {
 			logger::info(FMT_STRING("filename was esp file"));
+			return filename; // true
 		}
-
-		return false; // temp
+		else {
+			return ""; // false
+		}
 	}
 
-	bool Utility::IsPluginInstalled(const std::string name)
+	bool Utility::IsPluginInstalled(std::string_view name)
 	{
 		auto dataHandler = RE::TESDataHandler::GetSingleton();
+
 		auto* modInfo = dataHandler->LookupLoadedModByName(name);
 		if (modInfo) {
 			return true;
