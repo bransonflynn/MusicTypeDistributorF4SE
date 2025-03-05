@@ -33,4 +33,43 @@ namespace Internal
 
 		return result;
 	}
+
+	bool Utility::IsIniFileModName(std::string filename)
+	{
+		// TODO improve this garbage
+
+		// check for modname
+		std::string::size_type index = filename.find(mus_suffix);
+		if (index != std::string::npos) {
+			filename.erase(index, mus_suffix.length());
+		}
+		logger::info(FMT_STRING("filename erase: {}"),
+			filename);
+
+		std::string extension = filename.substr(filename.length() - 4, 4);
+		logger::info(FMT_STRING("extension: {}"),
+			extension);
+
+		if (extension == ".esp" || extension == ".esm" || extension == ".esl") {
+			logger::info(FMT_STRING("filename was esp file"));
+		}
+
+		return false; // temp
+	}
+
+	bool Utility::IsPluginInstalled(const std::string name)
+	{
+		auto dataHandler = RE::TESDataHandler::GetSingleton();
+		auto* modInfo = dataHandler->LookupLoadedModByName(name);
+		if (modInfo) {
+			return true;
+		}
+
+		modInfo = dataHandler->LookupLoadedLightModByName(name);
+		if (modInfo) {
+			return true;
+		}
+
+		return false;
+	}
 }

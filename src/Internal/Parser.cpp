@@ -7,8 +7,9 @@ namespace Internal
 {
 	void Parser::ParseINIs(CSimpleIniA& ini) noexcept
 	{
-		const std::filesystem::path data_dir{ R"(.\Data)" };
-		const auto pattern{ L"_MUS.ini" };
+		const std::filesystem::path data_dir = R"(.\Data)";
+		const std::wstring pattern = L"_MUS.ini";
+		const std::string patternStr = "_MUS.ini";
 
 		if (!exists(data_dir)) {
 			logger::error("ERROR: Failed to find Data directory"sv);
@@ -44,9 +45,11 @@ namespace Internal
 		const std::regex comma_space{ ", " };
 
 		for (const auto& f : mus_inis) {
-			const auto filename{ f.filename().string() };
+			const std::string filename = f.filename().string();
 
 			logger::info(FMT_STRING("Loading config file: {}"), filename);
+
+			// TODO check Utility::IsIniFileModName(filename) here
 
 			ini.LoadFile(f.wstring().data());
 
@@ -58,13 +61,13 @@ namespace Internal
 				ini.GetAllValues("General", k.pItem, values);
 				for (const auto& v : values) {
 					const auto trimmed{ std::regex_replace(std::string{ v.pItem }, comma_space, ",") };
-					auto trimmed_split = Utility::Split(trimmed);
+					std::vector<std::string> trimmed_split = Utility::Split(trimmed);
 
 					// check for invalid EditorIDs
 					for (int i = 0; i < trimmed_split.size(); i++) {
 						if (RE::TESForm::GetFormByEditorID(RE::BSFixedString(trimmed_split[i])) == nullptr) {
-							logger::warn(FMT_STRING("Invalid EditorID: {} was found in ini file {}. This form was not inserted. Please fix this in the _MUS.ini file."),
-								trimmed_split[i], filename);
+							logger::warn(FMT_STRING("Invalid EditorID: {} was found in ini file {}. This form will not be inserted into the MusicType {}. Please fix this in the _MUS.ini file."),
+								trimmed_split[i], k.pItem, filename);
 							trimmed_split.erase(trimmed_split.begin() + i);
 						}
 					}
